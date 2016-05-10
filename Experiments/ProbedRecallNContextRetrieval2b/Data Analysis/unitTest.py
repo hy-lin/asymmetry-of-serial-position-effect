@@ -42,7 +42,7 @@ def plotOrderSP(participants, aggregate_mode = 'all'):
     for pID, pKey in enumerate(participants.keys()):
         print pID
         for sp in range(1, setsize + 1):
-            trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['order'], 'serial_position': [sp]})
+            trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['order'], 'serial_position': [sp], 'output_position': [1, 2, 3, 4, 5]})
             for trial in trials:
                 pCor[pID, sp-1] += trial.correctness
                 
@@ -75,7 +75,7 @@ def plotItemSP(participants, aggregate_mode = 'all'):
     for pID, pKey in enumerate(participants.keys()):
         print pID
         for sp in range(1, setsize + 1):
-            trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['item'], 'serial_position': [sp]})
+            trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['item'], 'serial_position': [sp], 'output_position': [1, 2, 3, 4, 5]})
             for trial in trials:
                 pCor[pID, sp-1] += trial.correctness
                 

@@ -12,6 +12,7 @@ class ColumnsDefinition(object):
         self.session = 1
         
         self.tID = 2
+        self.output_position = 3
         self.stimulus = range(4, 10)
         self.probe_type = 10
         self.sp = 11
@@ -46,6 +47,7 @@ class TrialParser(object):
         trial.probe_type = val[self.columns.probe_type]
         trial.serial_position = int(int(val[self.columns.sp]))
         trial.probe = int(val[self.columns.probe_item])
+        trial.output_position = int(val[self.columns.output_position])
         
         trial.response = int(val[self.columns.response])
         
