@@ -72,7 +72,7 @@ def plotOrderTransposition(participants, aggregate_mode = 'all'):
     pRecall = numpy.zeros([nParticipants, setsize*2-1])
     for pID, pKey in enumerate(participants.keys()):
         print pID
-        trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['item']})
+        trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['item'], 'serial_position': [2, 3, 4, 5]})
         for trial in trials:
             displacement = trial.getTransposition()
             if displacement != numpy.NaN:
@@ -103,7 +103,7 @@ def plotItemTransposition(participants, aggregate_mode = 'all'):
     pRecall = numpy.zeros([nParticipants, setsize*2-1])
     for pID, pKey in enumerate(participants.keys()):
         print pID
-        trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['order']})
+        trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['order'], 'serial_position': [2, 3, 4, 5]})
         for trial in trials:
             displacement = trial.getTransposition()
             print displacement
@@ -136,7 +136,7 @@ def plotItemSP(participants, aggregate_mode = 'all'):
     pCor = numpy.zeros([nParticipants, setsize])
     for pID, pKey in enumerate(participants.keys()):
         print pID
-        for sp in range(1, setsize + 1):
+        for sp in range(1, setsize+1):
             trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['item'], 'serial_position': [sp]})
             for trial in trials:
                 pCor[pID, sp-1] += trial.correctness
