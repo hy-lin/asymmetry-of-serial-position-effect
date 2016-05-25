@@ -34,7 +34,7 @@ def loadData(file_name, ban_list = []):
         
     return participants
 
-def plotOrderSP(participants, aggregate_mode = 'all'):
+def plotItemSP(participants, aggregate_mode = 'all'):
     setsize = 6
     nParticipants = len(participants)
     
@@ -52,8 +52,13 @@ def plotOrderSP(participants, aggregate_mode = 'all'):
         data = {'order': numpy.array([range(1, setsize+1),numpy.mean(pCor, 0)])}
         
         agg_figure = figures.LineFigure(data)
-        agg_figure.setTitle('Probed recall', update = True)
-        
+        agg_figure.setTitle('Position Probed Item Recall')
+        agg_figure.setXLabel('serial position')
+        agg_figure.setYLabel('Proportion of Correct')
+        agg_figure.setXLim([0.5, setsize+0.5])
+        agg_figure.setYLim([0.5, 1.0])
+        agg_figure.legend = False
+        agg_figure.update()
         
          
     elif aggregate_mode == 'individual':
@@ -61,7 +66,7 @@ def plotOrderSP(participants, aggregate_mode = 'all'):
             data = {'order': numpy.array([range(1, setsize+1),pCor[pID]])}
             
             idv_figure = figures.LineFigure(data)
-            idv_figure.setTitle('Probed Recall, pID = {}'.format(pID), True)
+            idv_figure.setTitle('Position Probed Item Recall, pID = {}'.format(pID), True)
         
     pass
 
@@ -81,10 +86,16 @@ def plotOrderTransposition(participants, aggregate_mode = 'all'):
         pRecall[pID] /= len(trials)
             
     if aggregate_mode == 'all':
-        data = {'order': numpy.array([range(-setsize+1, setsize),numpy.mean(pRecall, 0)])}
+        data = {'item': numpy.array([range(-setsize+1, setsize),numpy.mean(pRecall, 0)])}
         
         agg_figure = figures.LineFigure(data)
-        agg_figure.setTitle('Order recall', update = True)
+        agg_figure.setTitle('Item Probed Position Recall')
+        agg_figure.setXLabel('displacement (recalled position - correct position)')
+        agg_figure.setYLabel('Proportion of response')
+        agg_figure.setXLim([0.5-setsize, setsize-0.5])
+        agg_figure.setYLim([0.0, 0.8])
+        agg_figure.legend = False
+        agg_figure.update()
         
         
     elif aggregate_mode == 'individual':
@@ -92,7 +103,7 @@ def plotOrderTransposition(participants, aggregate_mode = 'all'):
             data = {'order': numpy.array([range(-setsize+1, setsize), pRecall[pID]])}
             
             idv_figure = figures.LineFigure(data)
-            idv_figure.setTitle('Order Recall, pID = {}'.format(pID), True)
+            idv_figure.setTitle('Item Probed Position Recall, pID = {}'.format(pID), True)
         
     pass
 
@@ -116,20 +127,25 @@ def plotItemTransposition(participants, aggregate_mode = 'all'):
         data = {'order': numpy.array([range(-setsize+1, setsize),numpy.mean(pRecall, 0)])}
         
         agg_figure = figures.LineFigure(data)
-        agg_figure.setTitle('Probed recall', update = True)
-        
+        agg_figure.setTitle('Position Probed Item Recall', update = True)
+        agg_figure.setXLabel('displacement (recalled position - correct position)')
+        agg_figure.setYLabel('Proportion of response')
+        agg_figure.setXLim([0.5-setsize, setsize-0.5])
+        agg_figure.setYLim([0.0, 0.8])
+        agg_figure.legend = False
+        agg_figure.update()
         
     elif aggregate_mode == 'individual':
         for pID in range(len(participants)):
             data = {'order': numpy.array([range(-setsize+1, setsize), pRecall[pID]])}
             
             idv_figure = figures.LineFigure(data)
-            idv_figure.setTitle('Probed Recall, pID = {}'.format(pID), True)
+            idv_figure.setTitle('Position Probed Item Recall, pID = {}'.format(pID), True)
         
     pass
 
 
-def plotItemSP(participants, aggregate_mode = 'all'):
+def plotOrderSP(participants, aggregate_mode = 'all'):
     setsize = 6
     nParticipants = len(participants)
     
@@ -147,16 +163,21 @@ def plotItemSP(participants, aggregate_mode = 'all'):
         data = {'item': numpy.array([range(1, setsize+1),numpy.mean(pCor, 0)])}
         
         agg_figure = figures.LineFigure(data)
-        agg_figure.setTitle('Order recall', update = True)
+        agg_figure.setTitle('Item Probed Position Recall')
         
-        
+        agg_figure.setXLabel('serial position')
+        agg_figure.setYLabel('Proportion of Correct')
+        agg_figure.setXLim([0.5, setsize+0.5])
+        agg_figure.setYLim([0.5, 1.0])
+        agg_figure.legend = False
+        agg_figure.update()
          
     elif aggregate_mode == 'individual':
         for pID in range(len(participants)):
             data = {'item': numpy.array([range(1, setsize+1),pCor[pID]])}
             
             idv_figure = figures.LineFigure(data)
-            idv_figure.setTitle('Order Recall, pID = {}'.format(pID), True)
+            idv_figure.setTitle('Item Probed Position Recall, pID = {}'.format(pID), True)
         
     pass
 
@@ -168,6 +189,7 @@ def testModel():
 if __name__ == '__main__':
 #     testModel()
     participants = loadData('probedrecallNcontextrecall.dat')
+    print len(participants)
 
     for pID in participants.keys():
         trials = participants[pID].getTrialsMetConstraints({'probe_type': ['item']})

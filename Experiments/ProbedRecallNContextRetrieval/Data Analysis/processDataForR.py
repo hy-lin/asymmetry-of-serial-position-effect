@@ -44,7 +44,7 @@ def processItemRecallSerialPosition(participants, processedData):
         
         pCor = [0.0 for i in range(setsize)]
         for sp in range(1, setsize + 1):
-            trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['item'], 'serial_position': [sp]})
+            trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['order'], 'serial_position': [sp]})
             for trial in trials:
                 pCor[sp-1] += trial.correctness
                 
@@ -65,7 +65,7 @@ def processOrderRecallSerialPosition(participants, processedData):
         pCor = [0.0 for i in range(setsize)]
         
         for sp in range(1, setsize+1):
-            trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['order'], 'serial_position': [sp]})
+            trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['item'], 'serial_position': [sp]})
             for trial in trials:
                 pCor[sp-1] += trial.correctness
                 
@@ -84,7 +84,7 @@ def processItemRecallTransposition(participants, processedData):
             processedData[pID] = []
             
         pRecall = [0.0 for i in range(setsize*2-1)]
-        trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['item']})
+        trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['order']})
         for trial in trials:
             displacement = trial.getTransposition()
             if not numpy.isnan(displacement):
@@ -105,7 +105,7 @@ def processOrderRecallTransposition(participants, processedData):
             processedData[pID] = []
         
         pRecall = [0.0 for i in range(setsize*2-1)]
-        trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['order']})
+        trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['item']})
         for trial in trials:
             displacement = trial.getTransposition()
             if not numpy.isnan(displacement):
@@ -120,38 +120,6 @@ def processItemRecallSPAsymmetry(participants, processedData):
     setsize = 6
     
     processedData['var_name'] += ['ItemRecallSPAsymmetry']
-    
-    for pID, pKey in enumerate(participants.keys()):
-        if pID not in processedData.keys():
-            processedData[pID] = []
-        
-        pCorPrimacy = 0.0
-        trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['item'], 'serial_position': [1]})
-        for trial in trials:
-            pCorPrimacy += trial.correctness
-                
-        pCorPrimacy /= len(trials)
-        
-        pCorRecency = 0.0
-        trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['item'], 'serial_position': [setsize]})
-        for trial in trials:
-            pCorRecency += trial.correctness
-                
-        pCorRecency /= len(trials)
-        
-        if pCorPrimacy <= 0.5/len(trials):
-            pCorPrimacy = 0.5/len(trials)
-        if pCorRecency <= 0.5/len(trials):
-            pCorRecency = 0.5/len(trials)
-            
-        asymmetry_score = pCorRecency / pCorPrimacy
-        
-        processedData[pID] += [asymmetry_score]
-        
-def processOrderRecallSPAsymmetry(participants, processedData):
-    setsize = 6
-    
-    processedData['var_name'] += ['OrderRecallSPAsymmetry']
     
     for pID, pKey in enumerate(participants.keys()):
         if pID not in processedData.keys():
@@ -175,8 +143,40 @@ def processOrderRecallSPAsymmetry(participants, processedData):
             pCorPrimacy = 0.5/len(trials)
         if pCorRecency <= 0.5/len(trials):
             pCorRecency = 0.5/len(trials)
+            
+        asymmetry_score = pCorPrimacy / pCorRecency
+        
+        processedData[pID] += [asymmetry_score]
+        
+def processOrderRecallSPAsymmetry(participants, processedData):
+    setsize = 6
+    
+    processedData['var_name'] += ['OrderRecallSPAsymmetry']
+    
+    for pID, pKey in enumerate(participants.keys()):
+        if pID not in processedData.keys():
+            processedData[pID] = []
+        
+        pCorPrimacy = 0.0
+        trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['item'], 'serial_position': [1]})
+        for trial in trials:
+            pCorPrimacy += trial.correctness
+                
+        pCorPrimacy /= len(trials)
+        
+        pCorRecency = 0.0
+        trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['item'], 'serial_position': [setsize]})
+        for trial in trials:
+            pCorRecency += trial.correctness
+                
+        pCorRecency /= len(trials)
+        
+        if pCorPrimacy <= 0.5/len(trials):
+            pCorPrimacy = 0.5/len(trials)
+        if pCorRecency <= 0.5/len(trials):
+            pCorRecency = 0.5/len(trials)
 
-        asymmetry_score = pCorRecency / pCorPrimacy
+        asymmetry_score = pCorPrimacy / pCorRecency
         
         processedData[pID] += [asymmetry_score]
         
@@ -192,14 +192,14 @@ def processItemRecallTranspositionAsymmetry(participants, processedData):
         pCorPrimacy = 0.0
         pCorRecency = 0.0
         
-        trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['item']})
+        trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['order']})
         for trial in trials:
             displacement = trial.getTransposition()
             if not numpy.isnan(displacement):
                 if displacement <= -1:
-                    pCorRecency += 1.0
-                elif displacement >= 1:
                     pCorPrimacy += 1.0
+                elif displacement >= 1:
+                    pCorRecency += 1.0
                 
         pCorRecency /= len(trials)
         pCorPrimacy /= len(trials)
@@ -210,7 +210,7 @@ def processItemRecallTranspositionAsymmetry(participants, processedData):
         if pCorRecency <= 0.5/len(trials):
             pCorRecency = 0.5/len(trials)
 
-        asymmetry_score = pCorRecency / pCorPrimacy
+        asymmetry_score = pCorPrimacy / pCorRecency
         
         processedData[pID] += [asymmetry_score]
 
@@ -226,14 +226,14 @@ def processOrderRecallTranspositionAsymmetry(participants, processedData):
         pCorPrimacy = 0.0
         pCorRecency = 0.0
         
-        trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['order']})
+        trials = participants[pKey].getTrialsMetConstraints({'probe_type': ['item']})
         for trial in trials:
             displacement = trial.getTransposition()
             if not numpy.isnan(displacement):
                 if displacement <= -1:
-                    pCorRecency += 1.0
-                elif displacement >= 1:
                     pCorPrimacy += 1.0
+                elif displacement >= 1:
+                    pCorRecency += 1.0
                 
         pCorRecency /= len(trials)
         pCorPrimacy /= len(trials)
@@ -244,7 +244,7 @@ def processOrderRecallTranspositionAsymmetry(participants, processedData):
         if pCorRecency <= 0.5/len(trials):
             pCorRecency = 0.5/len(trials)
 
-        asymmetry_score = pCorRecency / pCorPrimacy
+        asymmetry_score = pCorPrimacy / pCorRecency
         
         processedData[pID] += [asymmetry_score]
         
